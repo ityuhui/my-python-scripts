@@ -4,17 +4,7 @@ import urllib2
 import time
 import sys
 
-
-
-def onea(rate,ChengBen,hold):
-	ChengBens = ChengBen * hold
-	top = ChengBen * (1.0 + rate)
-	tos = top * hold
-	ear = tos - ChengBens
-	print "%.2f" % top,"%.2f" % ear,rate*100
-	sys.stdout.flush()
-
-def maxmin(pri,ChengBen,hold):
+def print_max_or_min(pri,ChengBen,hold):
 	print pri,(pri - ChengBen )* hold, "%.2f%%" % ((pri / ChengBen - 1)*100) 
 	sys.stdout.flush()
 	
@@ -22,17 +12,16 @@ yhold = 9000
 yChengBen = 1.671
 yURL='http://hq.sinajs.cn/list=sh510050'
 
-#onea(0.05,yChengBen,yhold)
-#onea(0.1,yChengBen,yhold)
-#onea(0.2,yChengBen,yhold)
+def init_print(url,chengBen,hold):
+	req = urllib2.Request(url)
+	response = urllib2.urlopen(req)
+	the_page = response.read()
+	usarr = the_page.split(',')
 
-req = urllib2.Request(yURL)
-response = urllib2.urlopen(req)
-the_page = response.read()
-usarr = the_page.split(',')
+	print_max_or_min(float(usarr[5]),chengBen,hold)
+	print_max_or_min(float(usarr[4]),chengBen,hold)
 
-maxmin(float(usarr[5]),yChengBen,yhold)
-maxmin(float(usarr[4]),yChengBen,yhold)
+init_print(yURL,yChengBen,yhold)
 
 while True:
 	response = urllib2.urlopen(req)
